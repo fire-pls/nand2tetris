@@ -16,7 +16,5 @@ CHIP And {
     PARTS:
     // Put your code here:
     Nand(a=a, b=b, out=oneUnlessBothOne);
-    Nand(a=oneUnlessBothOne, b=oneUnlessBothOne, out=zeroUnlessBothOne);
-    Nand(a=oneUnlessBothOne, b=zeroUnlessBothOne, out=ONE);
-    Nand(a=ONE, b=oneUnlessBothOne, out=out);
+    Nand(a=oneUnlessBothOne, b=oneUnlessBothOne, out=out);
 }
