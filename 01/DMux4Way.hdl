@@ -5,10 +5,10 @@
 
 /**
  * 4-way demultiplexor:
- * {a, b, c, d} = {in, 0, 0, 0} if sel == 00
- *                {0, in, 0, 0} if sel == 01
- *                {0, 0, in, 0} if sel == 10
- *                {0, 0, 0, in} if sel == 11
+ * {a, b, c, d} = {in, 0, 0, 0} if sel == 00 s1nands0
+ *                {0, in, 0, 0} if sel == 01 s2
+ *                {0, 0, in, 0} if sel == 10 s1
+ *                {0, 0, 0, in} if sel == 11 s1&&s0
  */
 
 CHIP DMux4Way {
@@ -16,5 +16,17 @@ CHIP DMux4Way {
     OUT a, b, c, d;
 
     PARTS:
-    // Put your code here:
+    DMux(in=in, sel=sel[0], a=dmuxA, b=dmuxB); // When sel 1, dmuxB will contain in
+    DMux(in=in, sel=sel[0], a=dmuxC, b=dmuxD); // When sel 1, dmuxD will contain in
+    // Only output if in is positive
+    And(a=in, b=in, out=positiveIn);
+    // IF 0_, FLIP FIRST BIT:
+    Not(in=sel[1], out=notSel);
+    And(a=notSel, b=positiveIn, out=firstBit);
+    And(a=dmuxA, b=firstBit, out=a);
+    And(a=dmuxB, b=firstBit, out=b);
+    // IF 1_, NO NEED TO FLIP:
+    And(a=positiveIn, b=sel[1], out=positiveInAndSel);
+    And(a=dmuxC, b=positiveInAndSel, out=c);
+    And(a=dmuxD, b=positiveInAndSel, out=d);
 }
