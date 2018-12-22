@@ -14,4 +14,13 @@ CHIP FullAdder {
 
     PARTS:
     // Put you code here:
+    Xor(a=b, b=c, out=xorBC);
+    Not(in=xorBC, out=notXorBC);
+    Or(a=b, b=c, out=orBC);
+    And(a=b, b=c, out=andBC);
+    // CARRY is (aAND(bORC) OR bANDc
+    And(a=a, b=orBC, out=aAndBorC);
+    Or(a=andBC, b=aAndBorC, out=carry);
+    // If bit1 is 0, XOR bc is sum. if bit1 is 1, NOT(XOR) bc is sum
+    Mux(a=xorBC, b=notXorBC, sel=a, out=sum);
 }
