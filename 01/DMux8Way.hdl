@@ -16,5 +16,13 @@ CHIP DMux8Way {
     OUT a, b, c, d, e, f, g, h;
 
     PARTS:
-    // Put your code here:
+    // FIRST BIT ZERO 0__
+    And(a=sel[2], b=sel[2], out=positiveFirstBit);
+    Not(in=positiveFirstBit, out=zeroFirstBit);
+    And(a=in, b=in, out=positiveIn);
+    And(a=positiveIn, b=zeroFirstBit, out=dmuxABCD);
+    DMux4Way(in=dmuxABCD, sel=sel[0..1], a=a, b=b, c=c, d=d);
+    // FIRST BIT ONE 1__
+    And(a=positiveIn, b=positiveFirstBit, out=dmuxEFGH);
+    DMux4Way(in=dmuxEFGH, sel=sel[0..1], a=e, b=f, c=g, d=h);
 }
