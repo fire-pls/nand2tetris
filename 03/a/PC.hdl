@@ -16,5 +16,16 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // Do we need to perform action?
+    Or8Way(in[0]=load, in[1]=inc, in[2]=reset, in[3..7]=false, out=performAction);
+
+    // Get incremented amount
+    Inc16(in=prevCount, out=newCount);
+    // Choose incremented amount OR current amount
+    Mux16(a=newCount, b=in, sel=load, out=afterIncrement);
+
+    // Choose incremented amount OR reset
+    Mux16(a=afterIncrement, b=false, sel=reset, out=afterReset);
+
+    Register(in=afterReset, load=performAction, out=prevCount, out=out);
 }
